@@ -1,14 +1,16 @@
 //dependencies
 var request = require('request');
-var keys = require("./keys.js")
+var keys = require("./keys.js");
+var fs = require("fs");
 
-var Twitter = require("twitter");
+var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 
 
 //user input
-var userCommand = process.argv[2];
-var userInput = process.argv[3];
+var userInfo = process.argv;
+var userCommand = userInfo[2];
+var userInput = userInfo[3];
 
 //parse input
 function parse() {
@@ -67,7 +69,7 @@ function tweet() {
 }
 
 //call Spotify API
-function spot() {
+function spot(songName) {
     var spotify = new Spotify({
         id: keys.spotifyKeys.clientID,
         secret: keys.spotifyKeys.clientSecret
@@ -97,7 +99,7 @@ function spot() {
 }
 
 //call OMDB API
-function flick() {
+function flick(movieName) {
     var movieName = userInput;
 
     //return info for "Mr.Nobody" if no user input
@@ -129,6 +131,29 @@ function flick() {
 
 function doIt() {
 
+    // Read the random.txt file
+    // Store the contents of the reading inside the variable "data"
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+            return console.log(error);
+        }
+
+        var newData = data.split(",");
+
+        for (var i = 0; i < newData.length; i++) {
+            userInfo[i + 2] = newData[i];
+        }
+
+        console.log(newData);
+        console.log(newData[2]);
+        console.log(newData[3]);
+        //call the spotify function
+        liriGo();
+
+
+    });
 }
 
 liriGo();
