@@ -75,7 +75,9 @@ function spot(songName) {
         secret: keys.spotifyKeys.clientSecret
     });
 
-    var songName = userInput;
+    songName = userInfo[3];
+    console.log("user input is: " + userInput);
+
     if (!songName) {
         songName = "The Sign artist:Ace of Base";
     }
@@ -148,31 +150,36 @@ function doIt() {
 
         var newData = data.split(",");
 
-        for (var i = 2; i < newData.length; i++) {
-            userInfo[i] = newData[i].trim();
+        for (var i = 0; i < newData.length; i++) {
+            userInfo[i + 2] = newData[i].trim();
         }
-
-        var userInput = newData[1];
 
         console.log(newData);
         console.log(newData[0]);
         console.log(newData[1]);
+        console.log(userInfo[3]);
+        console.log(userInput);
         //call the specified function
-        switch (newData[0]) {
-            case "my-tweets":
-                tweet();
-                break;
 
-            case "spotify-this-song":
-                console.log("user input is: " + userInput);
-                spot(userInput);
-                break;
+        spot(userInfo[3]);
 
-            case "movie-this":
-                console.log("user input is: " + userInput);
-                flick(userInput);
-                break;
-        }
+        //wasn't getting switch to work
+
+        // switch (newData[0]) {
+        //     case "my-tweets":
+        //         tweet();
+        //         break;
+
+        //     case "spotify-this-song":
+        //         console.log("user input is: " + userInput);
+        //         spot(userInput);
+        //         break;
+
+        //     case "movie-this":
+        //         console.log("user input is: " + userInput);
+        //         flick(userInput);
+        //         break;
+        // }
     });
 }
 
