@@ -1,28 +1,67 @@
-var twitter = require("twitterKeys");
+//keys for Twitter and Spotify
+var keys = require("./keys.js")
 var inquirer = require("inquirer");
 
-var command = process.argv[2];
+//call twitter API
 
-if (command === "my-tweets") {
-    var params = { screen_name: 'SuperShrekEars' };
-    twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
+function tweet() {
+    var twitter = require("twitter");
+    var client = new twitter(keys.twitterKeys);
+
+    var parameters = {
+        screen_name: 'SuperShrekEars',
+        count: '20'
+    };
+
+    client.get('statuses/user_timeline', parameters, function(error, tweets, response) {
         if (!error) {
-            console.log(tweets);
+            for (var i = 0; i < tweets.length; i++) {
+                var time = tweets[i].created_at;
+                var text = tweets[i].text;
+                console.log('Posted At: ' + time + '    ' + 'Post Content: ' + text);
+            }
+        }
+        else {
+            console.log('Error Occured:\n' + error);
         }
     });
 }
 
-else if (command === "spotify-this-song") {
+//call spotify API
+function spot() {
+    var spotify = require('node-spotify-api');
+
+    var spotify = new spotify({
+        id: keys.spotifyKeys.id,
+        secret: keys.spotifyKeys.secret
+    });
+
     var songName = process.argv[3];
+    if (!process.argv[3]) {
+        songName = "The Sign artist:Ace of Base";
+    }
+
+
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+
+        //        console.log(data);
+        //console.log(JSON.stringify(data.tracks.items[0], null, 4));
+
+        var artists = [];
+        for (let i in data.tracks.items[0].artists) {
+            artists.push(data.tracks.items[0].artists[i].name);
+        }
+
+        console.log("Artist(s): " + artists.join(", "));
+        console.log("Song Name: " + data.tracks.items[0].name);
+        console.log("Preview Link: " + data.tracks.items[0].preview_url);
+        console.log("From Album: " + data.tracks.items[0].album.name);
+    });
 }
 
-else if (command === "movie-this") {
-    var movieName = process.argv[3];
-}
-
-else if (command === "do-what-it-says") {
-
-}
 
 // inquirer
 //     .prompt([{
