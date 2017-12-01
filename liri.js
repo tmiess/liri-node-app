@@ -2,8 +2,42 @@
 var keys = require("./keys.js")
 var inquirer = require("inquirer");
 
-//call twitter API
+//user input
+var userCommand = process.argv[2];
+var userInput = process.argv[3];
 
+//parse input
+function parse() {
+    var userInputArray = [];
+    for (var i = 3; i < process.argv.length; i++) {
+        userInputArray.push(process.argv[i]);
+    }
+
+    return userInputArray.join(' ');
+}
+
+//take input and call different functions
+switch (userCommand) {
+    case "my-tweets":
+        tweet();
+        break;
+
+    case "spotify-this-song":
+        spot();
+        break;
+
+    case "movie-this":
+        flick();
+        break;
+
+    case "do-what-it-says":
+        doIt();
+        break;
+}
+
+//functions to be called:
+
+//call Twitter API
 function tweet() {
     var twitter = require("twitter");
     var client = new twitter(keys.twitterKeys);
@@ -27,13 +61,12 @@ function tweet() {
     });
 }
 
-//call spotify API
+//call Spotify API
 function spot() {
     var spotify = require('node-spotify-api');
-
     var spotify = new spotify({
-        id: keys.spotifyKeys.id,
-        secret: keys.spotifyKeys.secret
+        id: keys.spotifyKeys.clientID,
+        secret: keys.spotifyKeys.clientSecret
     });
 
     var songName = process.argv[3];
@@ -62,6 +95,13 @@ function spot() {
     });
 }
 
+//call OMDB API
+function flick() {
 
+}
+
+function doIt() {
+
+}
 // inquirer
 //     .prompt([{
