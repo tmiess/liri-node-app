@@ -16,7 +16,7 @@ var userInput = userInfo[3];
 function parse() {
     var userInputArray = [];
     for (var i = 3; i < process.argv.length; i++) {
-        userInputArray.push(process.argv[i]);
+        userInputArray.push(userInfo[i]);
     }
 
     return userInputArray.join(' ');
@@ -78,6 +78,12 @@ function spot(songName) {
     var songName = userInput;
     if (!songName) {
         songName = "The Sign artist:Ace of Base";
+    }
+
+    //got this bit from fellow student Stephen Chapman
+    //adding double quotes makes spotify API search by order of terms
+    else {
+        songName = '"' + songName + '"';
     }
 
 
@@ -142,17 +148,31 @@ function doIt() {
 
         var newData = data.split(",");
 
-        for (var i = 0; i < newData.length; i++) {
-            userInfo[i + 2] = newData[i];
+        for (var i = 2; i < newData.length; i++) {
+            userInfo[i] = newData[i].trim();
         }
 
+        var userInput = newData[1];
+
         console.log(newData);
-        console.log(newData[2]);
-        console.log(newData[3]);
-        //call the spotify function
-        liriGo();
+        console.log(newData[0]);
+        console.log(newData[1]);
+        //call the specified function
+        switch (newData[0]) {
+            case "my-tweets":
+                tweet();
+                break;
 
+            case "spotify-this-song":
+                console.log("user input is: " + userInput);
+                spot(userInput);
+                break;
 
+            case "movie-this":
+                console.log("user input is: " + userInput);
+                flick(userInput);
+                break;
+        }
     });
 }
 
